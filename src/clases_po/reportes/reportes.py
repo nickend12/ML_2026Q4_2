@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from .Reporte_clasificacion import report_classification
 from .Reporte_regresion import report_regression
-from .hf_loader import DATASET_ID, DATASET_SPLIT, DATASET_URL, SEED
+from ..datos.hf_loader import DATASET_ID, DATASET_SPLIT, DATASET_URL, SEED
 
 
 def build_summary(df_raw, data, regression, classification):

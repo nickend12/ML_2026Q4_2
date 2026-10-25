@@ -63,15 +63,17 @@ La lógica sigue la estructura modular presentada en clase:
 
 ```text
 src/
-├── clases_po/                       # Archivos de modelos y reportes
-│   ├── hf_loader.py                 # Carga y preprocesamiento
-│   ├── regresion_lineal.py          # Modelo y métricas de regresión
-│   ├── clasificacion_riesgo.py      # Modelo y métricas de clasificación
-│   ├── Reporte_regresion.py         # Presentación de resultados de regresión
-│   ├── Reporte_clasificacion.py     # Presentación de resultados de clasificación
-│   ├── reportes.py                  # Generación de resumen_modelos.txt
-│   └── reportes/
-│       └── actividad_modelos.ipynb   # Ejecución y evidencia visible
+└── clases_po/
+    ├── datos/
+    │   └── hf_loader.py              # Carga y preprocesamiento
+    ├── entrenamiento/
+    │   ├── regresion_lineal.py       # Modelo y métricas de regresión
+    │   └── clasificacion_riesgo.py   # Modelo y métricas de clasificación
+    └── reportes/
+        ├── Reporte_regresion.py      # Resultados de regresión
+        ├── Reporte_clasificacion.py  # Resultados de clasificación
+        ├── reportes.py               # Resumen automático
+        └── actividad_modelos.ipynb   # Evidencia visible del flujo
 ```
 
 El notebook importa estos módulos y conserva las salidas de cada etapa para
@@ -85,9 +87,9 @@ los reportes del proyecto de otro grupo.
 |---|---|
 | 0. DataFrame automático | Carga desde Hugging Face y dimensiones, columnas, tipos y muestra en el notebook. |
 | 1. Preprocesamiento | Nulos, duplicados, tipos, columnas finales, etiqueta, división train/test, imputación y escalado. |
-| 2. Regresión | `regresion_lineal.py`, métricas MAE/RMSE/R², coeficientes, intercepto e interpretación. |
-| 3. Clasificación | `clasificacion_riesgo.py`, métricas por clase y matriz de confusión. |
-| 4. Resumen `.txt` | `reportes.py` genera `resumen_modelos.txt`; Actions lo publica como artefacto sin versionarlo. |
+| 2. Regresión | `entrenamiento/regresion_lineal.py`, métricas MAE/RMSE/R², coeficientes, intercepto e interpretación. |
+| 3. Clasificación | `entrenamiento/clasificacion_riesgo.py`, métricas por clase y matriz de confusión. |
+| 4. Resumen `.txt` | `reportes/reportes.py` genera `resumen_modelos.txt`; Actions lo publica como artefacto sin versionarlo. |
 | 5. Automatización | `ml_pipeline.yml` ejecuta el notebook y publica el artefacto en GitHub Actions. |
 
 ## Etapas del notebook
