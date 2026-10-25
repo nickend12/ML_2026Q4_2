@@ -2,8 +2,8 @@
 
 from datetime import datetime, timezone
 
-from .data import DATASET_ID, DATASET_SPLIT, DATASET_URL
-from .preprocessing import SEED
+from ..datos.carga import DATASET_ID, DATASET_SPLIT, DATASET_URL
+from ..datos.preprocesamiento import SEED
 
 
 def build_summary(df_raw, data, regression, classification):

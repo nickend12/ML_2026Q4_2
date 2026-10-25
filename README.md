@@ -61,10 +61,11 @@ La lógica sigue la estructura modular presentada en clase:
 
 ```text
 src/
-├── data.py            # Carga desde Hugging Face
-├── preprocessing.py   # Limpieza, división, imputación y escalado
-├── models.py          # Regresión, clasificación y métricas
-└── report.py          # Generación de resumen_modelos.txt
+├── clases_po/         # Espacio para clases reutilizables
+└── sincronicas/
+    ├── datos/         # Carga y preprocesamiento
+    ├── entrenamiento/ # Modelos y métricas
+    └── reportes/      # Generación de resumen_modelos.txt
 actividad_modelos.ipynb # Ejecución y evidencia visible del flujo
 ```
 
