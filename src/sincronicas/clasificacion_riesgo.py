@@ -1,18 +1,13 @@
-"""Entrenamiento y evaluación de los modelos de la actividad."""
+"""Entrenamiento y evaluación del modelo de clasificación."""
 
-import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (
     accuracy_score,
     confusion_matrix,
     f1_score,
-    mean_absolute_error,
-    mean_squared_error,
     precision_recall_fscore_support,
     precision_score,
-    r2_score,
     recall_score,
 )
 
@@ -20,24 +15,8 @@ from sklearn.metrics import (
 SEED = 42
 
 
-def train_and_evaluate_regression(data):
-    """Entrena la regresión lineal y devuelve el modelo y sus resultados."""
-    model = LinearRegression()
-    model.fit(data["X_train_r_prepared"], data["y_train_r"])
-    predictions = model.predict(data["X_test_r_prepared"])
-    coefficients = pd.Series(model.coef_, index=data["X"].columns)
-    return {
-        "model": model,
-        "predictions": predictions,
-        "mae": mean_absolute_error(data["y_test_r"], predictions),
-        "rmse": float(np.sqrt(mean_squared_error(data["y_test_r"], predictions))),
-        "r2": r2_score(data["y_test_r"], predictions),
-        "coefficients": coefficients,
-    }
-
-
-def train_and_evaluate_classification(data):
-    """Entrena Random Forest y devuelve el modelo y sus resultados."""
+def train_and_evaluate(data):
+    """Entrena Random Forest y calcula sus métricas de prueba."""
     model = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=SEED)
     model.fit(data["X_train_c_prepared"], data["y_train_c"])
     predictions = model.predict(data["X_test_c_prepared"])

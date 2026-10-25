@@ -2,8 +2,9 @@
 
 from datetime import datetime, timezone
 
-from ..datos.carga import DATASET_ID, DATASET_SPLIT, DATASET_URL
-from ..datos.preprocesamiento import SEED
+from .Reporte_clasificacion import report_classification
+from .Reporte_regresion import report_regression
+from .hf_loader import DATASET_ID, DATASET_SPLIT, DATASET_URL, SEED
 
 
 def build_summary(df_raw, data, regression, classification):
@@ -36,12 +37,7 @@ REGRESIÓN LINEAL
 ----------------
 Objetivo: predecir mpg a partir de características físicas y mecánicas.
 Algoritmo: LinearRegression con parámetros predeterminados.
-MAE: {regression["mae"]:.4f}
-RMSE: {regression["rmse"]:.4f}
-R2: {regression["r2"]:.4f}
-Intercepto: {regression["model"].intercept_:.4f}
-Coeficientes sobre variables estandarizadas:
-{coefficients.to_string()}
+{report_regression(regression)}
 Interpretación: el modelo explica {regression["r2"] * 100:.2f}% de la varianza de mpg.
 El coeficiente más negativo es {negative_feature}; el más positivo es {positive_feature}.
 Cada coeficiente representa el cambio en mpg ante una desviación estándar adicional,
@@ -52,12 +48,7 @@ CLASIFICACIÓN
 -------------
 Objetivo: clasificar efficiency como High o Low.
 Algoritmo: RandomForestClassifier(n_estimators=100, max_depth=5, random_state={SEED}).
-Accuracy: {classification["accuracy"]:.4f}
-Precision High: {classification["precision"]:.4f}
-Recall High: {classification["recall"]:.4f}
-F1 High: {classification["f1"]:.4f}
-Matriz de confusión [Low, High], filas reales y columnas predichas:
-{confusion}
+{report_classification(classification)}
 Interpretación: aciertos Low={confusion[0, 0]}, aciertos High={confusion[1, 1]},
 Low predicho como High={confusion[0, 1]}, High predicho como Low={confusion[1, 0]}.
 Limitación: el resultado depende del umbral de la mediana usado para crear la etiqueta.

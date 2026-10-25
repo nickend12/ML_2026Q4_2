@@ -1,13 +1,23 @@
-"""Preparación de datos para regresión y clasificación."""
+"""Carga y preparación del dataset de Hugging Face."""
 
 import numpy as np
 import pandas as pd
+from datasets import load_dataset
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
+DATASET_ID = "scikit-learn/auto-mpg"
+DATASET_URL = f"https://huggingface.co/datasets/{DATASET_ID}"
+DATASET_SPLIT = "train"
 SEED = 42
+
+
+def load_dataframe():
+    """Descarga el split configurado y lo convierte en un DataFrame."""
+    dataset = load_dataset(DATASET_ID, split=DATASET_SPLIT)
+    return dataset.to_pandas()
 
 
 def prepare_data(df_raw):
