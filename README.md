@@ -61,13 +61,14 @@ La lógica sigue la estructura modular presentada en clase:
 
 ```text
 src/
-└── sincronicas/
-    ├── hf_loader.py                 # Carga y preprocesamiento
-    ├── regresion_lineal.py          # Modelo y métricas de regresión
-    ├── clasificacion_riesgo.py      # Modelo y métricas de clasificación
-    ├── Reporte_regresion.py         # Presentación de resultados de regresión
-    ├── Reporte_clasificacion.py     # Presentación de resultados de clasificación
-    └── reportes.py                  # Generación de resumen_modelos.txt
+├── clases_po/                       # Archivos de modelos y reportes
+│   ├── hf_loader.py                 # Carga y preprocesamiento
+│   ├── regresion_lineal.py          # Modelo y métricas de regresión
+│   ├── clasificacion_riesgo.py      # Modelo y métricas de clasificación
+│   ├── Reporte_regresion.py         # Presentación de resultados de regresión
+│   ├── Reporte_clasificacion.py     # Presentación de resultados de clasificación
+│   └── reportes.py                  # Generación de resumen_modelos.txt
+└── sincronicas/                     # Espacio reservado para flujos síncronos
 actividad_modelos.ipynb # Ejecución y evidencia visible del flujo
 ```
 
