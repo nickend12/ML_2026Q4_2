@@ -1,132 +1,210 @@
-# S30 - EA2 Unidad 1: Modelos de Predicción y Clasificación en Machine Learning
+# EA2 Unidad 1: Modelos de predicción y clasificación
 
-## 📌 Información General del Proyecto
-- **Asignatura:** Machine Learning
-- **Docente:** Andrés Callejas
-- **Integrantes:**
-  - Rober Andrés Castillo
-  - Oscar Javier García
-- **Repositorio:** `ML_2026Q4_2`
+Proyecto de Machine Learning para predecir el consumo de combustible de
+vehículos mediante regresión lineal y clasificar su nivel de eficiencia
+mediante Random Forest.
 
----
+## Integrantes
 
-## 📊 0. Identificación y Carga Automática del Dataset
-- **Identificador en Hugging Face:** [`scikit-learn/auto-mpg`](https://huggingface.co/datasets/scikit-learn/auto-mpg)
-- **Configuración y Split:** Split de entrenamiento (`train`) cargado mediante la librería `datasets`.
-- **Dimensiones:** 398 registros y 9 columnas originales.
-- **Descripción del problema:** Análisis y estimación de la eficiencia del consumo de combustible en automóviles (medido en millas por galón - `mpg`) en función de sus características físicas y mecánicas.
+- Rober Andrés Castillo
+- Oscar Javier García
 
-| Columna | Tipo de Dato | Descripción |
-| :--- | :--- | :--- |
-| `mpg` | Numérico Continuo | Millas por galón (Variable objetivo para Regresión). |
-| `cylinders` | Numérico Entero | Número de cilindros del motor. |
-| `displacement` | Numérico Continuo | Desplazamiento del motor (pulgadas cúbicas). |
-| `horsepower` | Numérico Continuo | Caballos de fuerza del vehículo. |
-| `weight` | Numérico Continuo | Peso total del automóvil (libras). |
-| `acceleration` | Numérico Continuo | Tiempo de aceleración de 0 a 60 mph (segundos). |
-| `model_year` | Numérico Entero | Año del modelo del vehículo. |
-| `origin` | Numérico Entero | Origen geográfico del vehículo (1: EE.UU., 2: Europa, 3: Japón). |
-| `car_name` | Clic/Texto | Nombre del modelo (Eliminado en preprocesamiento). |
+## Alcance de esta entrega
 
----
+La entrega actual corresponde exclusivamente a estos archivos:
 
-## 🧹 1. Preprocesamiento de Datos y Fuga de Información (Data Leakage)
-Para garantizar la integridad y calidad de las entradas a los modelos, se aplicaron las siguientes transformaciones:
+- [`actividad_modelos.ipynb`](./actividad_modelos.ipynb): flujo completo de la actividad.
+- [`resumen_modelos.txt`](./resumen_modelos.txt): resultados generados automáticamente.
+- [`requirements.txt`](./requirements.txt): dependencias del proyecto.
+- [`.github/workflows/ml_pipeline.yml`](./.github/workflows/ml_pipeline.yml): ejecución automática.
+- `README.md`: documentación y guía de ejecución.
 
-1. **Limpieza de Valores Nulos y Caracteres Especiales:**
-   - Se detectaron valores perdidos codificados como el carácter `'?'` en la variable `horsepower`. Estos se reemplazaron por `NaN` y se convirtieron a formato numérico continuo (`float`).
-   - Se aplicó un imputador basado en la **mediana** (`SimpleImputer(strategy='median')`).
+Los archivos de ejercicios anteriores fueron retirados del estado final del
+repositorio en el commit `bf47e9c`. El historial anterior se conserva para
+mostrar la evolución del repositorio, pero no forma parte de esta entrega.
 
-2. **Eliminación de Variables no Predictivas:**
-   - La columna `car_name` fue removida del espacio de características ($X$) por tratarse de un identificador de texto con alta cardinalidad sin capacidad de generalización predictiva.
+## Dataset y objetivo
 
-3. **Construcción de la Variable de Clasificación (`efficiency`):**
-   - Se creó la etiqueta categórica dicotómica `efficiency`:
-     - **`High`**: Vehículos con un valor de `mpg` mayor o igual a la mediana del dataset ($23.00$ mpg).
-     - **`Low`**: Vehículos con un valor de `mpg` inferior a la mediana.
+- **Dataset:** [`scikit-learn/auto-mpg`](https://huggingface.co/datasets/scikit-learn/auto-mpg)
+- **Split utilizado:** `train`
+- **Carga:** automática mediante `datasets.load_dataset`.
+- **Registros iniciales:** 398.
+- **Columnas iniciales:** 9.
 
-4. **Prevención de Fuga de Información (Data Leakage):**
-   - **Para Clasificación:** Se eliminó explícitamente la columna continua `mpg` de las variables predictoras $X$ para evitar que el modelo acceda directamente a la respuesta original.
-   - **En Transformaciones:** Los transformadores (`SimpleImputer` y `StandardScaler`) ejecutaron la fase de ajuste (`.fit()`) **únicamente sobre el conjunto de entrenamiento (Train)**. El conjunto de prueba (Test) se transformó en estricto aislamiento utilizando únicamente las estadísticas previamente aprendidas.
+El dataset contiene información física y mecánica de automóviles. Se
+responden dos preguntas utilizando los mismos datos:
 
----
+1. ¿Se puede predecir el consumo continuo `mpg` a partir de las características
+   del vehículo?
+2. ¿Se puede clasificar el vehículo como de eficiencia `High` o `Low`?
 
-## 📈 2. Modelo de Regresión Lineal e Interpretación
-- **Objetivo:** Predecir cuantitativamente el rendimiento continuo de combustible (`mpg`).
-- **Algoritmo:** Regresión Lineal por Mínimos Cuadrados Ordinarios (`LinearRegression`).
-- **Configuración del Experimento:**
-  - **División:** 80% Entrenamiento / 20% Prueba.
-  - **Semilla Aleatoria (`random_state`):** 42.
-  - **Escalado:** `StandardScaler` aplicado en Train.
+### Variables principales
 
-### Métricas de Evaluación en Test:
-- **Error Absoluto Medio (MAE):** Métricas obtenidas directamente en escala de $mpg$.
-- **Raíz del Error Cuadrático Medio (RMSE):** Evalúa la magnitud de las desviaciones ponderando errores mayores.
-- **Coeficiente de Determinación ($R^2$):** Indica la proporción de la varianza explicada por el modelo.
+| Columna | Tipo | Uso |
+|---|---|---|
+| `mpg` | Numérico continuo | Objetivo de regresión. |
+| `cylinders` | Numérico entero | Variable predictora. |
+| `displacement` | Numérico continuo | Variable predictora. |
+| `horsepower` | Texto inicialmente, numérico después | Variable predictora con valores faltantes. |
+| `weight` | Numérico entero | Variable predictora. |
+| `acceleration` | Numérico continuo | Variable predictora. |
+| `model year` | Numérico entero | Variable predictora. |
+| `origin` | Numérico entero | Variable predictora. |
+| `car name` | Texto | Se elimina por ser un identificador textual de alta cardinalidad. |
 
-### Interpretación de Coeficientes e Intercepto:
-Los coeficientes estandarizados muestran que la variable **`weight` (peso)** presenta una relación fuertemente negativa con el consumo; a mayor peso del vehículo, menor es la cantidad de millas recorridas por galón. Por el contrario, **`model_year` (año del modelo)** muestra una contribución positiva, reflejando avances tecnológicos en eficiencia de combustible con el paso de los años.
+## Organización del notebook
 
----
+El notebook [`actividad_modelos.ipynb`](./actividad_modelos.ipynb) contiene
+todo el flujo reproducible:
 
-## 🌲 3. Modelo de Clasificación e Interpretación
-- **Objetivo:** Categorizar los vehículos en clases de eficiencia **`High`** vs **`Low`**.
-- **Algoritmo Seleccionado:** **Random Forest Classifier** (`RandomForestClassifier`).
-- **Justificación del Algoritmo:** Los conjuntos de árboles de decisión capturan relaciones no lineales e interacciones complejas entre variables físicas (ej. relación entre cilindrada, peso y aceleración) sin requerir supuestos de normalidad.
-- **Parámetros:** `n_estimators=100`, `max_depth=5`, `random_state=42`.
+### 0. Construcción automática del DataFrame
 
-### Métricas de Evaluación en Test:
-- **Exactitud (Accuracy):** Porcentaje de clasificaciones correctas sobre el total.
-- **Precisión (Precision):** Proporción de positivos predichos que fueron correctos.
-- **Exhaustividad (Recall):** Capacidad del modelo para identificar la totalidad de los vehículos de alta eficiencia.
-- **F1-Score:** Media armónica entre Precisión y Recall.
-- **Matriz de Confusión:** Permite analizar los falsos positivos y falsos negativos respecto a las categorías real vs predicha.
+- Descarga `scikit-learn/auto-mpg` directamente desde Hugging Face.
+- Convierte el dataset a un `DataFrame` de Pandas.
+- Muestra dimensiones, columnas, tipos de datos y primeras filas.
 
----
+### 1. Preprocesamiento
 
-## 📄 4. Resumen Automático (`resumen_modelos.txt`)
-El notebook ejecutable `actividad_modelos.ipynb` genera automáticamente al finalizar su corrida un archivo de texto plano en la raíz del proyecto titulado **`resumen_modelos.txt`**.
+- Reemplaza el carácter `?` por `NaN`.
+- Detecta 6 valores faltantes en `horsepower`.
+- Verifica duplicados.
+- Elimina `car name`.
+- Convierte los predictores a valores numéricos.
+- Imputa los faltantes con la mediana.
+- Crea `efficiency` usando la mediana de `mpg`:
+  - `High`: `mpg >= 23.00`.
+  - `Low`: `mpg < 23.00`.
+- Excluye `mpg` de los predictores de clasificación para evitar fuga de
+  información.
+- Divide los datos en 80 % de entrenamiento y 20 % de prueba.
+- Ajusta el imputador y el escalador únicamente con entrenamiento.
+- Usa `random_state=42`.
 
-Este archivo recopila:
-- Estampa de tiempo (fecha y hora exacta de ejecución).
-- Metadatos del dataset y transformaciones aplicadas.
-- Métricas, parámetros y resumen de coeficientes/matriz de confusión de ambos modelos.
+### 2. Regresión lineal
 
----
+- **Objetivo:** predecir `mpg`.
+- **Algoritmo:** `LinearRegression` con parámetros predeterminados.
+- **Evaluación:** MAE, RMSE y R².
+- **Interpretación:** coeficientes e intercepto considerando que los
+  predictores fueron estandarizados.
 
-## ⚙️ 5. Ejecución Automática en GitHub Actions (CI/CD)
-El proyecto incluye un flujo de integración continua ubicado en `.github/workflows/ml_pipeline.yml`.
+Resultados de la ejecución local:
 
-### Características del Workflow:
-- **Disparador (`on`):** Se activa automáticamente con cada evento `push` o `pull_request` a la rama principal (`main`).
-- **Pasos de Ejecución:**
-  1. Descarga el repositorio mediante `actions/checkout@v4`.
-  2. Configura el entorno Python 3.12.
-  3. Instala las dependencias declaradas en `requirements.txt`.
-  4. Ejecuta el notebook completo:
-     ```bash
-     jupyter nbconvert --to notebook --execute --inplace actividad_modelos.ipynb
-     ```
-  5. Empaqueta el archivo `resumen_modelos.txt` y lo publica como un **Artefacto Descargable** (`upload-artifact@v4`).
+```text
+MAE:  2.2556
+RMSE: 2.8632
+R²:   0.8475
+```
 
----
+El coeficiente más negativo corresponde a `weight`, mientras que el más
+positivo corresponde a `model year`. Al estar estandarizadas las variables,
+cada coeficiente representa el cambio esperado en `mpg` ante un aumento de una
+desviación estándar en el predictor, manteniendo constantes los demás.
 
-## 💻 6. Instrucciones de Ejecución Local
+### 3. Clasificación
 
-### Pasos para replicar el proyecto:
+- **Objetivo:** clasificar `efficiency` como `High` o `Low`.
+- **Algoritmo:** `RandomForestClassifier`.
+- **Parámetros:** `n_estimators=100`, `max_depth=5`,
+  `random_state=42`.
+- **Evaluación:** accuracy, precision, recall, F1 y matriz de confusión.
+
+Random Forest es adecuado porque puede capturar relaciones no lineales e
+interacciones entre las características numéricas del vehículo.
+
+Resultados de la ejecución local:
+
+```text
+Accuracy:  0.9750
+Precision: 0.9750
+Recall:    0.9750
+F1:        0.9750
+```
+
+Matriz de confusión, con filas reales y columnas predichas en el orden
+`[Low, High]`:
+
+```text
+[[39  1]
+ [ 1 39]]
+```
+
+El modelo clasificó correctamente 39 vehículos `Low` y 39 vehículos `High`.
+Confundió un vehículo `Low` como `High` y un vehículo `High` como `Low`.
+
+### 4. Resumen automático
+
+La última sección del notebook genera
+[`resumen_modelos.txt`](./resumen_modelos.txt), que contiene:
+
+- Fecha de ejecución.
+- Identificación y URL del dataset.
+- Split y dimensiones.
+- Estado inicial y operaciones de preprocesamiento.
+- Variables, parámetros y configuración de cada modelo.
+- Métricas de prueba.
+- Coeficientes e intercepto de la regresión.
+- Matriz de confusión y errores de clasificación.
+- Interpretaciones y limitaciones.
+
+El archivo no se redacta manualmente: se sobrescribe al ejecutar el notebook.
+
+## Ejecución local
+
 ```bash
-# 1. Clonar el repositorio
-git clone [https://github.com/nickend12/ML_2026Q4_2.git](https://github.com/nickend12/ML_2026Q4_2.git)
+git clone https://github.com/nickend12/ML_2026Q4_2.git
 cd ML_2026Q4_2
 
-# 2. Crear y activar el entorno virtual
 python3.12 -m venv venv
-source venv/bin/activate  # En Windows use: venv\Scripts\activate
+source venv/bin/activate
 
-# 3. Instalar las dependencias
-pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 
-# 4. Ejecutar el notebook y generar el resumen
-jupyter nbconvert --to notebook --execute --inplace actividad_modelos.ipynb
+jupyter nbconvert --to notebook --execute --inplace \
+  --ExecutePreprocessor.timeout=1800 actividad_modelos.ipynb
 ```
+
+Al finalizar, el archivo `resumen_modelos.txt` queda actualizado en la raíz
+del proyecto.
+
+## Ejecución automática en GitHub Actions
+
+El workflow [`ml_pipeline.yml`](./.github/workflows/ml_pipeline.yml) se
+ejecuta automáticamente en:
+
+- `push` a `main` o `master`.
+- `pull_request` hacia `main` o `master`.
+- Ejecución manual mediante `workflow_dispatch`.
+
+El workflow:
+
+1. Descarga el repositorio.
+2. Configura Python 3.12.
+3. Instala `requirements.txt`.
+4. Ejecuta `actividad_modelos.ipynb` con `nbconvert`.
+5. Publica `resumen_modelos.txt` como artefacto descargable.
+
+## Historial de la actividad
+
+Los commits principales de esta entrega son:
+
+```text
+045df9c feat: agregar notebook reproducible de modelos
+b3c8990 docs: documentar flujo y resultados de la actividad
+bf47e9c chore: limpiar archivos de ejercicios anteriores
+```
+
+## Limitaciones
+
+- La etiqueta `efficiency` depende del umbral de la mediana de `mpg`.
+- La regresión lineal puede no capturar relaciones no lineales o interacciones.
+- Los resultados corresponden a una partición concreta con semilla 42.
+- El rendimiento puede cambiar con vehículos de otras épocas o distribuciones.
+- Los resultados de los modelos no implican causalidad.
+
+## Enlaces de entrega
+
+- [Repositorio](https://github.com/nickend12/ML_2026Q4_2)
+- [Commits de la rama `main`](https://github.com/nickend12/ML_2026Q4_2/commits/main)
+- [Ejecuciones de GitHub Actions](https://github.com/nickend12/ML_2026Q4_2/actions)
