@@ -13,7 +13,8 @@ mediante Random Forest.
 
 La entrega actual corresponde exclusivamente a estos archivos:
 
-- [`actividad_modelos.ipynb`](./actividad_modelos.ipynb): punto de entrada y evidencia
+- [`actividad_modelos.ipynb`](./src/clases_po/reportes/actividad_modelos.ipynb):
+  punto de entrada y evidencia
   reproducible del flujo completo.
 - [`src/`](./src/): módulos de carga, preprocesamiento, modelos y generación del
   resumen.
@@ -68,8 +69,9 @@ src/
 │   ├── clasificacion_riesgo.py      # Modelo y métricas de clasificación
 │   ├── Reporte_regresion.py         # Presentación de resultados de regresión
 │   ├── Reporte_clasificacion.py     # Presentación de resultados de clasificación
-│   └── reportes.py                  # Generación de resumen_modelos.txt
-actividad_modelos.ipynb # Ejecución y evidencia visible del flujo
+│   ├── reportes.py                  # Generación de resumen_modelos.txt
+│   └── reportes/
+│       └── actividad_modelos.ipynb   # Ejecución y evidencia visible
 ```
 
 El notebook importa estos módulos y conserva las salidas de cada etapa para
@@ -90,7 +92,7 @@ los reportes del proyecto de otro grupo.
 
 ## Etapas del notebook
 
-El notebook [`actividad_modelos.ipynb`](./actividad_modelos.ipynb) contiene
+El notebook [`actividad_modelos.ipynb`](./src/clases_po/reportes/actividad_modelos.ipynb) contiene
 todo el flujo reproducible:
 
 ### 0. Construcción automática del DataFrame
@@ -197,7 +199,8 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
 jupyter nbconvert --to notebook --execute --inplace \
-  --ExecutePreprocessor.timeout=1800 actividad_modelos.ipynb
+  --ExecutePreprocessor.timeout=1800 \
+  src/clases_po/reportes/actividad_modelos.ipynb
 ```
 
 Al finalizar, el archivo `resumen_modelos.txt` se genera localmente y queda
@@ -217,7 +220,7 @@ El workflow:
 1. Descarga el repositorio.
 2. Configura Python 3.12.
 3. Instala `requirements.txt`.
-4. Ejecuta `actividad_modelos.ipynb` con `nbconvert`.
+4. Ejecuta `src/clases_po/reportes/actividad_modelos.ipynb` con `nbconvert`.
 5. Publica `resumen_modelos.txt` como artefacto descargable.
 
 ## Historial de la actividad
