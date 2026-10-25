@@ -17,7 +17,8 @@ La entrega actual corresponde exclusivamente a estos archivos:
   reproducible del flujo completo.
 - [`src/`](./src/): módulos de carga, preprocesamiento, modelos y generación del
   resumen.
-- [`resumen_modelos.txt`](./resumen_modelos.txt): resultados generados automáticamente.
+- `resumen_modelos.txt`: resultado generado durante la ejecución y publicado
+  únicamente como artefacto de GitHub Actions; no se versiona en el repositorio.
 - [`requirements.txt`](./requirements.txt): dependencias del proyecto.
 - [`.github/workflows/ml_pipeline.yml`](./.github/workflows/ml_pipeline.yml): ejecución automática.
 - `README.md`: documentación y guía de ejecución.
@@ -84,7 +85,7 @@ los reportes del proyecto de otro grupo.
 | 1. Preprocesamiento | Nulos, duplicados, tipos, columnas finales, etiqueta, división train/test, imputación y escalado. |
 | 2. Regresión | `regresion_lineal.py`, métricas MAE/RMSE/R², coeficientes, intercepto e interpretación. |
 | 3. Clasificación | `clasificacion_riesgo.py`, métricas por clase y matriz de confusión. |
-| 4. Resumen `.txt` | `reportes.py` genera `resumen_modelos.txt` automáticamente. |
+| 4. Resumen `.txt` | `reportes.py` genera `resumen_modelos.txt`; Actions lo publica como artefacto sin versionarlo. |
 | 5. Automatización | `ml_pipeline.yml` ejecuta el notebook y publica el artefacto en GitHub Actions. |
 
 ## Etapas del notebook
@@ -169,8 +170,7 @@ Confundió un vehículo `Low` como `High` y un vehículo `High` como `Low`.
 
 ### 4. Resumen automático
 
-La última sección del notebook genera
-[`resumen_modelos.txt`](./resumen_modelos.txt), que contiene:
+La última sección del notebook genera `resumen_modelos.txt`, que contiene:
 
 - Fecha de ejecución.
 - Identificación y URL del dataset.
@@ -200,8 +200,8 @@ jupyter nbconvert --to notebook --execute --inplace \
   --ExecutePreprocessor.timeout=1800 actividad_modelos.ipynb
 ```
 
-Al finalizar, el archivo `resumen_modelos.txt` queda actualizado en la raíz
-del proyecto.
+Al finalizar, el archivo `resumen_modelos.txt` se genera localmente y queda
+ignorado por Git. En GitHub Actions se publica como artefacto descargable.
 
 ## Ejecución automática en GitHub Actions
 

@@ -3,6 +3,9 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Resultado generado por GitHub Actions
+resumen_modelos.txt
+
 # C extensions
 *.so
 
