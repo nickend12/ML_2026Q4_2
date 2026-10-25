@@ -13,7 +13,10 @@ mediante Random Forest.
 
 La entrega actual corresponde exclusivamente a estos archivos:
 
-- [`actividad_modelos.ipynb`](./actividad_modelos.ipynb): flujo completo de la actividad.
+- [`actividad_modelos.ipynb`](./actividad_modelos.ipynb): punto de entrada y evidencia
+  reproducible del flujo completo.
+- [`src/`](./src/): módulos de carga, preprocesamiento, modelos y generación del
+  resumen.
 - [`resumen_modelos.txt`](./resumen_modelos.txt): resultados generados automáticamente.
 - [`requirements.txt`](./requirements.txt): dependencias del proyecto.
 - [`.github/workflows/ml_pipeline.yml`](./.github/workflows/ml_pipeline.yml): ejecución automática.
@@ -52,7 +55,24 @@ responden dos preguntas utilizando los mismos datos:
 | `origin` | Numérico entero | Variable predictora. |
 | `car name` | Texto | Se elimina por ser un identificador textual de alta cardinalidad. |
 
-## Organización del notebook
+## Organización del proyecto
+
+La lógica sigue la estructura modular presentada en clase:
+
+```text
+src/
+├── data.py            # Carga desde Hugging Face
+├── preprocessing.py   # Limpieza, división, imputación y escalado
+├── models.py          # Regresión, clasificación y métricas
+└── report.py          # Generación de resumen_modelos.txt
+actividad_modelos.ipynb # Ejecución y evidencia visible del flujo
+```
+
+El notebook importa estos módulos y conserva las salidas de cada etapa para
+que la evidencia pueda revisarse directamente. El workflow de GitHub Actions
+ejecuta el notebook desde la raíz del repositorio.
+
+## Etapas del notebook
 
 El notebook [`actividad_modelos.ipynb`](./actividad_modelos.ipynb) contiene
 todo el flujo reproducible:
