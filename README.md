@@ -227,13 +227,31 @@ El workflow:
 
 ## Historial de la actividad
 
-Los commits principales de esta entrega son:
+Los commits principales que evidencian la evolución de esta entrega son:
 
 ```text
 045df9c feat: agregar notebook reproducible de modelos
 b3c8990 docs: documentar flujo y resultados de la actividad
 bf47e9c chore: limpiar archivos de ejercicios anteriores
+26ae4ac refactor: mover notebook a carpeta de reportes
+eb61529 refactor: ordenar modulos por responsabilidad
+fb5c6ab chore: actualizar evidencia ejecutada del notebook
 ```
+
+Los cambios documentados corresponden a estas etapas:
+
+1. Creación del notebook reproducible con carga, preprocesamiento, regresión,
+   clasificación y resumen automático.
+2. Limpieza de archivos de ejercicios anteriores para limitar el alcance de la
+   entrega.
+3. Organización del código en `datos`, `entrenamiento` y `reportes`.
+4. Traslado del notebook a `src/clases_po/reportes/` y actualización del
+   workflow para ejecutarlo desde esa ruta.
+5. Ejecución y actualización de las salidas del notebook como evidencia del
+   flujo validado.
+
+El archivo `resumen_modelos.txt` no se versiona: se genera durante la
+ejecución y se publica como artefacto de GitHub Actions.
 
 ## Limitaciones
 
