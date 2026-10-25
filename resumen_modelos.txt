@@ -1,0 +1,61 @@
+RESUMEN AUTOMÁTICO DE MODELOS DE MACHINE LEARNING
+============================================================
+Fecha de ejecución UTC: 2026-10-25T15:03:47.944630+00:00
+Dataset: scikit-learn/auto-mpg
+URL: https://huggingface.co/datasets/scikit-learn/auto-mpg
+Split: train
+Dimensiones iniciales: (398, 9)
+Dimensiones después de limpiar: (398, 9)
+
+PREPROCESAMIENTO
+----------------
+Nulos iniciales: {'horsepower': 6}
+Duplicados iniciales: 0
+Se reemplazaron '?' por NaN, se eliminaron nombres de vehículos y duplicados.
+Se convirtieron los predictores a numéricos y se imputó la mediana.
+Imputadores y escaladores se ajustaron únicamente con train.
+La etiqueta efficiency usa la mediana de mpg (23.00): High >= mediana, Low < mediana.
+Predictoras: ['cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin']
+División: 80% train / 20% test; random_state=42.
+
+REGRESIÓN LINEAL
+----------------
+Objetivo: predecir mpg a partir de características físicas y mecánicas.
+Algoritmo: LinearRegression con parámetros predeterminados.
+MAE: 2.2556
+RMSE: 2.8632
+R2: 0.8475
+Intercepto: 23.6082
+Coeficientes sobre variables estandarizadas:
+cylinders      -0.264273
+displacement    1.465106
+horsepower     -0.494947
+weight         -5.659110
+acceleration    0.187582
+model year      2.859148
+origin          1.073207
+Interpretación: el modelo explica 84.75% de la varianza de mpg.
+El coeficiente más negativo es weight; el más positivo es model year.
+Cada coeficiente representa el cambio en mpg ante una desviación estándar adicional,
+manteniendo las demás variables constantes. El intercepto corresponde a predictores promedio.
+Limitación: una relación lineal puede no capturar interacciones o no linealidades.
+
+CLASIFICACIÓN
+-------------
+Objetivo: clasificar efficiency como High o Low.
+Algoritmo: RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42).
+Accuracy: 0.9750
+Precision High: 0.9750
+Recall High: 0.9750
+F1 High: 0.9750
+Matriz de confusión [Low, High], filas reales y columnas predichas:
+[[39  1]
+ [ 1 39]]
+Interpretación: aciertos Low=39, aciertos High=39,
+Low predicho como High=1, High predicho como Low=1.
+Limitación: el resultado depende del umbral de la mediana usado para crear la etiqueta.
+
+CONCLUSIÓN
+----------
+Ambos modelos se evaluaron sobre datos de prueba no vistos durante el ajuste.
+Los resultados no implican causalidad y podrían cambiar con otros datos o particiones.
