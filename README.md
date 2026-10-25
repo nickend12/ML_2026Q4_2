@@ -68,13 +68,24 @@ src/
 │   ├── Reporte_regresion.py         # Presentación de resultados de regresión
 │   ├── Reporte_clasificacion.py     # Presentación de resultados de clasificación
 │   └── reportes.py                  # Generación de resumen_modelos.txt
-└── sincronicas/                     # Espacio reservado para flujos síncronos
 actividad_modelos.ipynb # Ejecución y evidencia visible del flujo
 ```
 
 El notebook importa estos módulos y conserva las salidas de cada etapa para
 que la evidencia pueda revisarse directamente. El workflow de GitHub Actions
-ejecuta el notebook desde la raíz del repositorio.
+ejecuta el notebook desde la raíz del repositorio. No se incluyen los CSV ni
+los reportes del proyecto de otro grupo.
+
+## Verificación frente a la rúbrica
+
+| Componente | Evidencia |
+|---|---|
+| 0. DataFrame automático | Carga desde Hugging Face y dimensiones, columnas, tipos y muestra en el notebook. |
+| 1. Preprocesamiento | Nulos, duplicados, tipos, columnas finales, etiqueta, división train/test, imputación y escalado. |
+| 2. Regresión | `regresion_lineal.py`, métricas MAE/RMSE/R², coeficientes, intercepto e interpretación. |
+| 3. Clasificación | `clasificacion_riesgo.py`, métricas por clase y matriz de confusión. |
+| 4. Resumen `.txt` | `reportes.py` genera `resumen_modelos.txt` automáticamente. |
+| 5. Automatización | `ml_pipeline.yml` ejecuta el notebook y publica el artefacto en GitHub Actions. |
 
 ## Etapas del notebook
 
