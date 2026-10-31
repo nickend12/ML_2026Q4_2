@@ -5,13 +5,16 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-
 def train_and_evaluate(data):
     """Entrena la regresión y calcula sus métricas de prueba."""
     model = LinearRegression()
     model.fit(data["X_train_r_prepared"], data["y_train_r"])
     predictions = model.predict(data["X_test_r_prepared"])
-    coefficients = pd.Series(model.coef_, index=data["X"].columns)
+    
+    # Manejo de coeficientes con las columnas codificadas correctas
+    feature_names = data.get("feature_names", [f"feat_{i}" for i in range(len(model.coef_))])
+    coefficients = pd.Series(model.coef_, index=feature_names)
+    
     return {
         "model": model,
         "predictions": predictions,
